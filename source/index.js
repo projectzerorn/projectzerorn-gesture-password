@@ -32,7 +32,12 @@ var GesturePassword = React.createClass({
         onEnd: PropTypes.func,
         hollow: PropTypes.bool,
         interval: PropTypes.number,
-        allowCross: PropTypes.bool
+        allowCross: PropTypes.bool,
+        styles: PropTypes.object,
+        radius: React.PropTypes.shape({
+            outer: React.PropTypes.number.isRequired,
+            inner: React.PropTypes.number.isRequired
+        })
     },
     getDefaultProps: function() {
         return {
@@ -42,7 +47,15 @@ var GesturePassword = React.createClass({
             status: 'normal',
             interval: 0,
             allowCross: false,
-            hollow: true
+            hollow: true,
+            radius: {
+                outer: 2 * Radius,
+                inner: 2 * Radius / 3
+            },
+            styles: {
+                circle: {},
+                line: {}
+            }
         }
     },
     getInitialState: function() {
@@ -95,7 +108,7 @@ var GesturePassword = React.createClass({
                         {this.state.message || this.props.message}
                     </Text>
                 </View>
-                <View style={styles.board} {...this._panResponder.panHandlers}>
+                <View style={[styles.board]} {...this._panResponder.panHandlers}>
                     {this.renderCircles()}
                     {this.renderLines()}
                     <Line ref='line' color={color} />
@@ -107,14 +120,14 @@ var GesturePassword = React.createClass({
     },
     renderCircles: function() {
         var array = [], fill, color;
-        var { hollow, status, wrongColor, rightColor } = this.props;
+        var { hollow, status, wrongColor, rightColor, radius } = this.props;
 
         this.state.circles.forEach(function(c, i) {
             fill = !hollow || c.isActive;
             color = status === 'wrong' ? wrongColor : rightColor;
 
             array.push(
-                <Circle key={'c_' + i} fill={fill} border={hollow} color={color} x={c.x} y={c.y} r={Radius} />
+                <Circle key={'c_' + i} fill={fill} border={hollow} color={color} x={c.x} y={c.y} r={radius} />
             )
         });
 
