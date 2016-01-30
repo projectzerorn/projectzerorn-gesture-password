@@ -127,8 +127,14 @@ var GesturePassword = React.createClass({
             fill = !hollow || c.isActive;
             color = status === 'wrong' ? wrongColor : rightColor;
 
+            let r = {...radius}
+            if (c.isLatest) {
+                console.log('yay')
+                r.inner = r.inner * 1.5 | 0
+            }
+
             array.push(
-                <Circle key={'c_' + i} fill={fill} border={hollow} color={color} x={c.x} y={c.y} r={radius} />
+                <Circle key={'c_' + i} fill={fill} border={hollow} color={color} x={c.x} y={c.y} r={r} />
             )
         });
 
@@ -149,8 +155,11 @@ var GesturePassword = React.createClass({
         return array;
     },
     setActive: function(index) {
-        this.state.circles[index].isActive = true;
+        for (var i = 0; i < this.state.circles.length; i++) {
+            this.state.circles[i].isLatest = i === index
+        }
 
+        this.state.circles[index].isActive = true;
         var circles = this.state.circles;
         this.setState({circles});
     },
