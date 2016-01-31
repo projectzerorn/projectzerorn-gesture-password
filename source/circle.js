@@ -5,6 +5,7 @@ var {
     StyleSheet,
     PropTypes,
     View,
+    Animated
     } = React;
 
 var Circle = React.createClass({
@@ -29,7 +30,7 @@ var Circle = React.createClass({
                         {left: x - outerRadius, top: y - outerRadius, width: 2 * outerRadius, height: 2 * outerRadius, borderRadius: outerRadius},
                         fill && {borderColor: color}, border && {borderWidth: 1}]}>
 
-                {fill && <View style={{width: innerRadius, height: innerRadius, borderRadius: innerRadius / 2, backgroundColor: color}} />}
+                {fill && <Animated.View style={{width: innerRadius, height: innerRadius, borderRadius: innerRadius / 2, backgroundColor: color, ...this.props.style}} />}
             </View>
         )
     }

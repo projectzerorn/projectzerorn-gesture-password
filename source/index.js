@@ -7,8 +7,9 @@ var {
     Dimensions,
     PanResponder,
     View,
-    Text
-    } = React;
+    Text,
+    Animated
+} = React;
 
 var Line = require('./line');
 var Circle = require('./circle');
@@ -67,6 +68,7 @@ var GesturePassword = React.createClass({
             let q = parseInt(i / 3);
             circles.push({
                 isActive: false,
+                scale: new Animated.Value(1),
                 x: p * (Radius * 2 + Margin) + Margin + Radius,
                 y: q * (Radius * 2 + Margin) + Margin + Radius
             });
@@ -127,14 +129,20 @@ var GesturePassword = React.createClass({
             fill = !hollow || c.isActive;
             color = status === 'wrong' ? wrongColor : rightColor;
 
-            let r = {...radius}
-            if (c.isLatest) {
-                console.log('yay')
-                r.inner = r.inner * 1.5 | 0
-            }
-
             array.push(
-                <Circle key={'c_' + i} fill={fill} border={hollow} color={color} x={c.x} y={c.y} r={r} />
+                <Circle
+                    key={'c_' + i}
+                    fill={fill}
+                    border={hollow}
+                    color={color}
+                    x={c.x}
+                    y={c.y}
+                    r={radius}
+                    style={{
+                      transform: [
+                        {scale: c.scale}
+                      ]
+                    }} />
             )
         });
 
@@ -155,22 +163,39 @@ var GesturePassword = React.createClass({
         return array;
     },
     setActive: function(index) {
-        for (var i = 0; i < this.state.circles.length; i++) {
-            this.state.circles[i].isLatest = i === index
+        var circles = this.state.circles
+        var regular = 1
+        var fat = 1.5
+        for (var i = 0; i < NUM_CIRCLES; i++) {
+            var c = circles[i]
+            var to
+            if (i === index) {
+                c.isActive = true
+                to = fat
+            } else {
+                to = regular
+            }
+
+            Animated.timing(
+                c.scale,
+                {
+                    duration: 200,
+                    toValue: to
+                }
+            ).start()
         }
 
-        this.state.circles[index].isActive = true;
-        var circles = this.state.circles;
-        this.setState({circles});
+        this.setState(this.state);
     },
     resetActive: function() {
         this.state.lines = [];
-        for (let i=0; i < NUM_CIRCLES; i++) {
-            this.state.circles[i].isActive = false;
-        }
+        this.setActive(-1)
+        // for (let i=0; i < NUM_CIRCLES; i++) {
+        //     this.state.circles[i].isActive = false;
+        // }
 
-        var circles = this.state.circles;
-        this.setState({circles});
+        // var circles = this.state.circles;
+        // this.setState({circles});
     },
     getTouchChar: function(touch) {
         var x = touch.x;
@@ -293,6 +318,8 @@ var GesturePassword = React.createClass({
 
             if ( this.props.interval>0 ) {
                 this.timer = setTimeout(() => this.resetActive(), this.props.interval);
+            } else {
+                this.resetActive()
             }
         }
     }
