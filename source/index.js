@@ -19,6 +19,31 @@ var Height = Dimensions.get('window').height;
 var Top = (Height - Width)/2.0 * 1.5;
 var Radius = Width / 10;
 var NUM_CIRCLES = 9
+var DEFAULT_STYLES = {
+    frame: {
+        backgroundColor: '#292B38',
+        flex: 1
+    },
+    board: {
+        position: 'absolute',
+        left: 0,
+        top: Top,
+        width: Width,
+        height: Height
+    },
+    message: {
+        position: 'absolute',
+        left: 0,
+        top: Top / 2.2,
+        width: Width,
+        height: Top / 3,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    msgText: {
+        fontSize: 14
+    }
+}
 
 var GesturePassword = React.createClass({
     timer: null,
@@ -27,6 +52,7 @@ var GesturePassword = React.createClass({
     isMoving: false,
     propTypes: {
         message: PropTypes.string,
+        styles: PropTypes.object,
         rightColor: PropTypes.string,
         wrongColor: PropTypes.string,
         status: PropTypes.oneOf(['right', 'wrong', 'normal']),
@@ -35,12 +61,16 @@ var GesturePassword = React.createClass({
         hollow: PropTypes.bool,
         interval: PropTypes.number,
         allowCross: PropTypes.bool,
-        styles: PropTypes.object,
         radius: React.PropTypes.shape({
             outer: React.PropTypes.number.isRequired,
             inner: React.PropTypes.number.isRequired
+        }),
+        styles: React.PropTypes.shape({
+            frame: React.PropTypes.object,
+            msgText: React.PropTypes.object
         })
     },
+
     getDefaultProps: function() {
         return {
             message: '',
@@ -54,10 +84,7 @@ var GesturePassword = React.createClass({
                 outer: 2 * Radius,
                 inner: 2 * Radius / 3
             },
-            styles: {
-                circle: {},
-                line: {}
-            }
+            styles: DEFAULT_STYLES
         }
     },
     getInitialState: function() {
@@ -80,6 +107,8 @@ var GesturePassword = React.createClass({
         }
     },
     componentWillMount: function() {
+        this.styles = StyleSheet.create({...DEFAULT_STYLES, ...this.props.styles})
+
         this._panResponder = PanResponder.create({
             // 要求成为响应者：
             onStartShouldSetPanResponder: (event, gestureState) => true,
@@ -105,13 +134,13 @@ var GesturePassword = React.createClass({
         var color = this.props.status === 'wrong' ? this.props.wrongColor : this.props.rightColor;
 
         return (
-            <View style={[styles.frame, this.props.style, {flex: 1}]}>
-                <View style={styles.message}>
-                    <Text style={[styles.msgText, {color: color}]}>
+            <View style={this.styles.frame}>
+                <View style={this.styles.message}>
+                    <Text style={[this.styles.msgText, {color: color}]}>
                         {this.state.message || this.props.message}
                     </Text>
                 </View>
-                <View style={[styles.board]} {...this._panResponder.panHandlers}>
+                <View style={[this.styles.board]} {...this._panResponder.panHandlers}>
                     {this.renderCircles()}
                     {this.renderLines()}
                     <Line ref='line' color={color} />
@@ -190,12 +219,6 @@ var GesturePassword = React.createClass({
     resetActive: function() {
         this.state.lines = [];
         this.setActive(-1)
-        // for (let i=0; i < NUM_CIRCLES; i++) {
-        //     this.state.circles[i].isActive = false;
-        // }
-
-        // var circles = this.state.circles;
-        // this.setState({circles});
     },
     getTouchChar: function(touch) {
         var x = touch.x;
@@ -322,31 +345,6 @@ var GesturePassword = React.createClass({
                 this.resetActive()
             }
         }
-    }
-});
-
-var styles = StyleSheet.create({
-    frame: {
-        backgroundColor: '#292B38'
-    },
-    board: {
-        position: 'absolute',
-        left: 0,
-        top: Top,
-        width: Width,
-        height: Height
-    },
-    message: {
-        position: 'absolute',
-        left: 0,
-        top: Top / 2.2,
-        width: Width,
-        height: Top / 3,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    msgText: {
-        fontSize: 14
     }
 });
 
