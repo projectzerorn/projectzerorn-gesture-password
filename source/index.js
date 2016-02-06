@@ -53,6 +53,7 @@ var GesturePassword = React.createClass({
     propTypes: {
         message: PropTypes.string,
         styles: PropTypes.object,
+        baseColor: PropTypes.string,
         rightColor: PropTypes.string,
         wrongColor: PropTypes.string,
         status: PropTypes.oneOf(['right', 'wrong', 'normal']),
@@ -74,6 +75,7 @@ var GesturePassword = React.createClass({
     getDefaultProps: function() {
         return {
             message: '',
+            baseColor: '#5FA8FC',
             rightColor: '#5FA8FC',
             wrongColor: '#D93609',
             status: 'normal',
@@ -130,9 +132,14 @@ var GesturePassword = React.createClass({
             }
         });
     },
-    render: function() {
-        var color = this.props.status === 'wrong' ? this.props.wrongColor : this.props.rightColor;
 
+    getColorForStatus: function (status) {
+        return status === 'wrong' ? this.props.wrongColor :
+            status === 'right' ? this.props.rightColor : this.props.baseColor
+    },
+
+    render: function() {
+        var color = this.getColorForStatus(this.props.status)
         return (
             <View style={this.styles.frame}>
                 <View style={this.styles.message}>
@@ -152,11 +159,10 @@ var GesturePassword = React.createClass({
     },
     renderCircles: function() {
         var array = [], fill, color;
-        var { hollow, status, wrongColor, rightColor, radius } = this.props;
-
-        this.state.circles.forEach(function(c, i) {
+        var { hollow, status, radius } = this.props;
+        var color = this.getColorForStatus(this.props.status)
+        this.state.circles.forEach((c, i) => {
             fill = !hollow || c.isActive;
-            color = status === 'wrong' ? wrongColor : rightColor;
 
             array.push(
                 <Circle
@@ -179,11 +185,8 @@ var GesturePassword = React.createClass({
     },
     renderLines: function() {
         var array = [], color;
-        var{ status, wrongColor, rightColor } = this.props;
-
+        var color = this.getColorForStatus(this.props.status)
         this.state.lines.forEach(function(l, i) {
-            color = status === 'wrong' ? wrongColor : rightColor;
-
             array.push(
                 <Line key={'l_' + i} color={color} start={l.start} end={l.end} />
             )
