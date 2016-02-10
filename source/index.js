@@ -42,6 +42,8 @@ var DEFAULT_STYLES = {
     },
     msgText: {
         fontSize: 14
+    },
+    line: {
     }
 }
 
@@ -68,7 +70,8 @@ var GesturePassword = React.createClass({
         }),
         styles: React.PropTypes.shape({
             frame: React.PropTypes.object,
-            msgText: React.PropTypes.object
+            msgText: React.PropTypes.object,
+            line: React.PropTypes.object
         })
     },
 
@@ -150,7 +153,7 @@ var GesturePassword = React.createClass({
                 <View style={[this.styles.board]} {...this._panResponder.panHandlers}>
                     {this.renderCircles()}
                     {this.renderLines()}
-                    <Line ref='line' color={color} />
+                    <Line ref='line' style={this.props.styles.line} />
                 </View>
 
                 {this.props.children}
@@ -186,9 +189,9 @@ var GesturePassword = React.createClass({
     renderLines: function() {
         var array = [], color;
         var color = this.getColorForStatus(this.props.status)
-        this.state.lines.forEach(function(l, i) {
+        this.state.lines.forEach((l, i) => {
             array.push(
-                <Line key={'l_' + i} color={color} start={l.start} end={l.end} />
+                <Line key={'l_' + i} start={l.start} end={l.end} style={this.props.styles.line} />
             )
         });
 
@@ -222,6 +225,9 @@ var GesturePassword = React.createClass({
     resetActive: function() {
         this.state.lines = [];
         this.setActive(-1)
+    },
+    setLineProps: function (props) {
+      this.refs.line.setNativeProps(props)
     },
     getTouchChar: function(touch) {
         var x = touch.x;
@@ -268,7 +274,7 @@ var GesturePassword = React.createClass({
                 y: this.state.circles[this.lastIndex].y
             };
 
-            this.refs.line.setNativeProps({start: point, end: point});
+            this.setLineProps({start: point, end: point});
 
             this.props.onStart && this.props.onStart();
 
@@ -282,7 +288,7 @@ var GesturePassword = React.createClass({
         var y = e.nativeEvent.pageY - Top;
 
         if ( this.isMoving ) {
-            this.refs.line.setNativeProps({end: {x, y}});
+            this.setLineProps({end: {x, y}});
 
             var lastChar = null;
 
@@ -324,7 +330,7 @@ var GesturePassword = React.createClass({
                     y: this.state.circles[this.lastIndex].y
                 };
 
-                this.refs.line.setNativeProps({start: point});
+                this.setLineProps({start: point});
             }
         }
 
@@ -338,7 +344,7 @@ var GesturePassword = React.createClass({
             this.isMoving = false;
 
             var origin = {x: 0, y: 0};
-            this.refs.line.setNativeProps({start: origin, end: origin});
+            this.setLineProps({start: origin, end: origin});
 
             this.props.onEnd && this.props.onEnd(password);
 

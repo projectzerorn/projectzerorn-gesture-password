@@ -9,7 +9,7 @@ var {
 
 var Line = React.createClass({
     propTypes: {
-        color: PropTypes.string,
+        style: PropTypes.object,
         start: PropTypes.shape({
             x: PropTypes.number,
             y: PropTypes.number
@@ -21,7 +21,6 @@ var Line = React.createClass({
     },
     getDefaultProps: function() {
         return {
-            color: '#8E91A8',
             start: {x: 0, y: 0},
             end: {x: 0, y: 0}
         }
@@ -29,16 +28,11 @@ var Line = React.createClass({
     setNativeProps: function(props) {
         this.setState(props);
     },
-    componentWillReceiveProps: function(nextProps) {
-        if ( nextProps.color !== this.props.color ) {
-            this.setState({color: nextProps.color});
-        }
-    },
     getInitialState: function() {
         return this.props;
     },
     render: function() {
-        var { start, end, color } = this.state;
+        var { start, end } = this.state;
 
         if ( helper.isEquals(start, end) ) return null;
 
@@ -50,8 +44,11 @@ var Line = React.createClass({
 
         return (
             <View ref='line' style={[
-                styles.line, {backgroundColor: color, left: start.x, top: start.y, width: length},
-                {transform: [{translateX: moveX}, {translateY: moveY}, {rotateZ: angle}]}
+                styles.line,
+                {left: start.x, top: start.y, width: length},
+                {transform: [{translateX: moveX}, {translateY: moveY}, {rotateZ: angle}]},
+                this.props.style,
+                this.state.style
             ]} />
         )
     }
@@ -59,6 +56,7 @@ var Line = React.createClass({
 
 var styles = StyleSheet.create({
     line: {
+        backgroundColor: '#ffffff',
         position: 'absolute',
         height: 1
     }
