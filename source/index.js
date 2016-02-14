@@ -61,7 +61,10 @@ var GesturePassword = React.createClass({
         status: PropTypes.oneOf(['right', 'wrong', 'normal']),
         onStart: PropTypes.func,
         onEnd: PropTypes.func,
-        hollow: PropTypes.bool,
+        // whether to paint nucleus in intial state
+        nucleus: PropTypes.bool,
+        // whether to paint shell in initial state
+        shell: PropTypes.bool,
         interval: PropTypes.number,
         allowCross: PropTypes.bool,
         radius: React.PropTypes.shape({
@@ -84,7 +87,7 @@ var GesturePassword = React.createClass({
             status: 'normal',
             interval: 0,
             allowCross: false,
-            hollow: true,
+            shell: true,
             radius: {
                 outer: 2 * Radius,
                 inner: 2 * Radius / 3
@@ -161,17 +164,17 @@ var GesturePassword = React.createClass({
         )
     },
     renderCircles: function() {
-        var array = [], fill, color;
-        var { hollow, status, radius } = this.props;
+        var array = [], color;
+        var { nucleus, shell, status, radius } = this.props;
         var color = this.getColorForStatus(this.props.status)
         this.state.circles.forEach((c, i) => {
-            fill = !hollow || c.isActive;
+            var fill = nucleus || !shell || c.isActive;
 
             array.push(
                 <Circle
                     key={'c_' + i}
                     fill={fill}
-                    border={hollow}
+                    border={shell}
                     color={color}
                     x={c.x}
                     y={c.y}
@@ -224,6 +227,10 @@ var GesturePassword = React.createClass({
     },
     resetActive: function() {
         this.state.lines = [];
+        this.state.circles.forEach(c => {
+            c.isActive = false
+        })
+
         this.setActive(-1)
     },
     setLineProps: function (props) {
