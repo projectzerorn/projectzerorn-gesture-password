@@ -1,12 +1,11 @@
 var helper = require('./helper');
 
-var React = require('react-native');
-var {
+import React, { PropTypes } from 'react'
+import {
     StyleSheet,
-    PropTypes,
     View,
     Animated
-    } = React;
+} from 'react-native';
 
 var Circle = React.createClass({
     propTypes: {
@@ -15,9 +14,9 @@ var Circle = React.createClass({
         border: PropTypes.bool,
         x: PropTypes.number,
         y: PropTypes.number,
-        r: React.PropTypes.shape({
-            inner: React.PropTypes.number.isRequired,
-            outer: React.PropTypes.number.isRequired
+        r: PropTypes.shape({
+            inner: PropTypes.number.isRequired,
+            outer: PropTypes.number.isRequired
         })
     },
     render: function() {

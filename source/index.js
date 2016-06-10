@@ -1,15 +1,14 @@
 var helper = require('./helper');
 
-var React = require('react-native');
-var {
+import React, { PropTypes } from 'react'
+import {
     StyleSheet,
-    PropTypes,
     Dimensions,
     PanResponder,
     View,
     Text,
     Animated
-} = React;
+} from 'react-native'
 
 var Line = require('./line');
 var Circle = require('./circle');
@@ -67,14 +66,14 @@ var GesturePassword = React.createClass({
         shell: PropTypes.bool,
         interval: PropTypes.number,
         allowCross: PropTypes.bool,
-        radius: React.PropTypes.shape({
-            outer: React.PropTypes.number.isRequired,
-            inner: React.PropTypes.number.isRequired
+        radius: PropTypes.shape({
+            outer: PropTypes.number.isRequired,
+            inner: PropTypes.number.isRequired
         }),
-        styles: React.PropTypes.shape({
-            frame: React.PropTypes.object,
-            msgText: React.PropTypes.object,
-            line: React.PropTypes.object
+        styles: PropTypes.shape({
+            frame: PropTypes.object,
+            msgText: PropTypes.object,
+            line: PropTypes.object
         })
     },
 

@@ -1,11 +1,10 @@
 var helper = require('./helper');
 
-var React = require('react-native');
-var {
+import React, { PropTypes } from 'react'
+import {
     StyleSheet,
-    PropTypes,
     View,
-    } = React;
+} from 'react-native';
 
 var Line = React.createClass({
     propTypes: {
