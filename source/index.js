@@ -21,7 +21,8 @@ var NUM_CIRCLES = 9
 var DEFAULT_STYLES = {
     frame: {
         backgroundColor: '#292B38',
-        flex: 1
+        flex: 1,
+        alignSelf: 'stretch'
     },
     board: {
         position: 'absolute',
