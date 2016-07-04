@@ -41,7 +41,8 @@ var DEFAULT_STYLES = {
         justifyContent: 'center'
     },
     msgText: {
-        fontSize: 14
+        fontSize: 14,
+        textAlign: 'center'
     },
     line: {
     }
