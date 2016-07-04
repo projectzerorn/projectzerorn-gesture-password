@@ -117,6 +117,9 @@ var GesturePassword = React.createClass({
     },
     componentWillMount: function() {
         this.styles = StyleSheet.create({...DEFAULT_STYLES, ...this.props.styles})
+        if(this.props.styles != undefined && this.props.styles.board.top != undefined){
+            Top = this.props.styles.board.top;
+        }
 
         this._panResponder = PanResponder.create({
             // 要求成为响应者：
