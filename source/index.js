@@ -89,8 +89,8 @@ var GesturePassword = React.createClass({
             allowCross: false,
             shell: true,
             radius: {
-                outer: 2 * Radius,
-                inner: 2 * Radius / 3
+                outer: Radius,
+                inner: Radius / 2.5
             },
             styles: DEFAULT_STYLES
         }
