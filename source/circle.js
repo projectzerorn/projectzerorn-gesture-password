@@ -9,6 +9,7 @@ import {
 
 var Circle = React.createClass({
     propTypes: {
+        backgroundColor: PropTypes.string,
         color: PropTypes.string,
         fill: PropTypes.bool,
         border: PropTypes.bool,
@@ -27,7 +28,7 @@ var Circle = React.createClass({
         return (
             <View style={[styles.outer,
                         {left: x - outerRadius, top: y - outerRadius, width: 2 * outerRadius, height: 2 * outerRadius, borderRadius: outerRadius},
-                        border && {borderColor: color}, border && {borderWidth: 1}]}>
+                        border && {borderColor: color}, border && {borderWidth: 1},{backgroundColor:this.props.backgroundColor}]}>
 
                 {fill && <Animated.View style={{width: innerRadius, height: innerRadius, borderRadius: innerRadius / 2, backgroundColor: color, ...this.props.style}} />}
             </View>

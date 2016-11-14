@@ -55,7 +55,6 @@ var GesturePassword = React.createClass({
     isMoving: false,
     propTypes: {
         message: PropTypes.string,
-        styles: PropTypes.object,
         baseColor: PropTypes.string,
         rightColor: PropTypes.string,
         wrongColor: PropTypes.string,
@@ -158,15 +157,16 @@ var GesturePassword = React.createClass({
                     </Text>
                 </View>
                 <View style={[this.styles.board]} {...this._panResponder.panHandlers}>
-                    {this.renderCircles()}
-                    {this.renderLines()}
                     <Line ref='line' style={this.props.styles.line} />
+                    {this.renderLines()}
+                    {this.renderCircles()}
                 </View>
 
                 {this.props.children}
             </View>
         )
     },
+
     renderCircles: function() {
         var array = [], color;
         var { nucleus, shell, status, radius } = this.props;
@@ -176,6 +176,7 @@ var GesturePassword = React.createClass({
 
             array.push(
                 <Circle
+                    backgroundColor={this.props.styles.frame.backgroundColor}
                     key={'c_' + i}
                     fill={fill}
                     border={shell}
@@ -282,7 +283,7 @@ var GesturePassword = React.createClass({
 
             var point = {
                 x: this.state.circles[this.lastIndex].x,
-                y: this.state.circles[this.lastIndex].y
+                y: this.state.circles[this.lastIndex].y - this.props.styles.line.height/2
             };
 
             this.setLineProps({start: point, end: point});
@@ -323,11 +324,11 @@ var GesturePassword = React.createClass({
                 this.state.lines.push({
                     start: {
                         x: this.state.circles[lastIndex].x,
-                        y: this.state.circles[lastIndex].y
+                        y: this.state.circles[lastIndex].y - this.props.styles.line.height/2
                     },
                     end: {
                         x: this.state.circles[thisIndex].x,
-                        y: this.state.circles[thisIndex].y
+                        y: this.state.circles[thisIndex].y - this.props.styles.line.height/2
                     }
                 });
 
@@ -338,7 +339,7 @@ var GesturePassword = React.createClass({
 
                 var point = {
                     x: this.state.circles[this.lastIndex].x,
-                    y: this.state.circles[this.lastIndex].y
+                    y: this.state.circles[this.lastIndex].y - this.props.styles.line.height/2
                 };
 
                 this.setLineProps({start: point});
